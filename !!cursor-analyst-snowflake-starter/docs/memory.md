@@ -83,10 +83,10 @@
 - **Keep it simple**: Everything in one daily file - no complex subfolders
 
 ## 12. Known Issues / Decisions
-- **2024-01-15**: Implemented MDC best practices for SQL style and safety
-- **2024-01-15**: Added comprehensive data profiling and cost monitoring tools
-- **2024-01-15**: Established query header format for better documentation
-- **2024-08-19**: Added simple daily logging system (logs/YYYY-MM-DD.md format)
+- **2025-01-15**: Implemented MDC best practices for SQL style and safety
+- **2025-01-15**: Added comprehensive data profiling and cost monitoring tools
+- **2025-01-15**: Established query header format for better documentation
+- **2025-08-19**: Added simple daily logging system (logs/YYYY-MM-DD.md format)
 - **Cost optimization**: Always provide preview queries for operations on large tables
 - **Performance**: Use QUALIFY instead of DISTINCT with window functions where possible
 
