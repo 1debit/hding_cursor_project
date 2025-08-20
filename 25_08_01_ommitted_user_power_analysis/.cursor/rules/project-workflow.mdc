@@ -1,0 +1,13 @@
+---
+name: Project Workflow
+description: >
+  Standard workflow for interacting with Cursor in this project.
+globs:
+  - "**/*"
+alwaysApply: false
+---
+
+# Workflow
+1. Cursor provides a **Plan** first (sources, filters, metrics).
+2. Then outputs SQL → saved in `sql/` with header → preview + final version.
+3. For risky/expensive queries: highlight risks, seek confirmation, propose safer alternatives.

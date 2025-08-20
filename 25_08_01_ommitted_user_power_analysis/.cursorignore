@@ -1,0 +1,43 @@
+# Cursor-specific ignore patterns
+# Large data files that shouldn't be indexed by Cursor
+*.csv
+*.parquet
+*.json
+*.xlsx
+*.xls
+data/
+exports/
+downloads/
+
+# Large log files
+logs/
+*.log
+
+# Virtual environments (large and not needed for context)
+.venv/
+venv/
+ENV/
+env/
+
+# Compiled Python files
+__pycache__/
+*.pyc
+*.pyo
+
+# Temporary files
+tmp/
+temp/
+.tmp/
+*.tmp
+
+# Large binary files
+*.so
+*.dll
+*.dylib
+
+# Node modules if any JS tooling is added
+node_modules/
+
+# Large backup files
+*.bak
+*.backup

@@ -1,0 +1,21 @@
+---
+name: SQL File Naming
+description: >
+  File naming convention and header structure for SQL files.
+globs:
+  - "sql/**"
+alwaysApply: true
+---
+
+# Naming
+- Numeric prefix: `010_`, `020_`, `030_`, incremented by 10s.
+- Use short descriptive names: `020_monthly_sales.sql`.
+- Revisions: add `__v2` or date suffix.
+
+# File header (template)
+-- Title: <short description>
+-- Intent: <what the query answers>
+-- Inputs: <tables/views used>
+-- Output: <fields and meaning>
+-- Assumptions: <assumptions or limitations>
+-- Validation: <how to verify correctness>
