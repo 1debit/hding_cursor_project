@@ -140,3 +140,48 @@ snowsql -f snowflake.sql
 ---
 
 *项目状态: 开发中 | 最后更新: 2025年8月19日*
+
+## 🔐 **DWN Session Replay 检测条件**
+
+### **核心检测逻辑**
+根据Darwinium (DWN) 设备智能数据的分析，session replay攻击的关键检测条件是：
+
+```sql
+profiling.replay_count > 1 
+AND 
+has(profiling.secure_id.signals, "INVALID_NONCE")
+```
+
+### **检测原理**
+- **`profiling.replay_count > 1`**: 表示会话被重放多次
+- **`has(profiling.secure_id.signals, "INVALID_NONCE")`**: 表示在secure_id信号中包含"INVALID_NONCE"标识
+
+### **验证方法**
+通过分析confirmed的session replay bad session (p2psession)，验证这些session是否都满足上述DWN定义条件。
+
+### **分析目标**
+- 确认所有bad session都满足检测条件
+- 验证检测逻辑的准确性和覆盖率
+- 识别可能的误报或漏报情况
+
+## 📊 **最新项目进展**
+
+### **已完成的查询**
+- **`identify_session_replay_p2p.sql`**: 识别所有满足session replay条件的P2P sessions
+- **查询功能**:
+  - 按DWN检测条件分类sessions
+  - 提供详细的统计分析
+  - 验证检测逻辑的准确性
+
+### **查询结果分类**
+1. **CONFIRMED_REPLAY**: 满足两个条件的sessions
+2. **HIGH_REPLAY_COUNT_NO_INVALID_NONCE**: 高重放次数但无INVALID_NONCE
+3. **LOW_REPLAY_COUNT_WITH_INVALID_NONCE**: 低重放次数但有INVALID_NONCE
+4. **NORMAL_SESSION**: 正常sessions
+
+### **下一步计划**
+- 运行查询验证检测条件
+- 分析结果与已知bad sessions的匹配度
+- 优化检测逻辑
+
+---
