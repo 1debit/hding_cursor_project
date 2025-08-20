@@ -75,20 +75,28 @@
 - `scripts/monitor_queries.py`: Monitor query performance and costs
 - `src/sf_utils.py`: Utility functions for data analysis and profiling
 
-## 11. Known Issues / Decisions
-- **2024-01-15**: Implemented MDC best practices for SQL style and safety
-- **2024-01-15**: Added comprehensive data profiling and cost monitoring tools
-- **2024-01-15**: Established query header format for better documentation
+## 11. Project Logging System
+- **Simple daily logs**: `logs/YYYY-MM-DD.md` - One file per day with all progress
+- **When to log**: User says "save to log" → create/update today's log file
+- **Content**: Timestamps, progress, discoveries, issues solved, URLs, next steps
+- **AI continuity**: Read latest log files when revisiting project to understand background
+- **Keep it simple**: Everything in one daily file - no complex subfolders
+
+## 12. Known Issues / Decisions
+- **2025-01-15**: Implemented MDC best practices for SQL style and safety
+- **2025-01-15**: Added comprehensive data profiling and cost monitoring tools
+- **2025-01-15**: Established query header format for better documentation
+- **2025-08-19**: Added simple daily logging system (logs/YYYY-MM-DD.md format)
 - **Cost optimization**: Always provide preview queries for operations on large tables
 - **Performance**: Use QUALIFY instead of DISTINCT with window functions where possible
 
-## 12. Emergency Procedures
+## 13. Emergency Procedures
 - **Runaway queries**: Use `SYSTEM$CANCEL_QUERY()` or warehouse suspension
 - **High costs**: Monitor via `monitor_queries.py`, set up cost alerts
 - **Data quality issues**: Document in this section, implement validation checks
 - **Schema changes**: Always test in DEV, provide rollback strategy
 
-## 13. Contact Information
+## 14. Contact Information
 - **Data Team Lead**: [Your Name] - [email]
 - **Snowflake Admin**: [Admin Name] - [email]  
 - **Escalation**: [Manager Name] - [email]
