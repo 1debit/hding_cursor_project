@@ -3,9 +3,35 @@
 > Purpose: Long-term memory for this project. Combine goals, context, definitions, and key decisions.
 
 ## 1. Project Overview
-- **Goal:** Provide a robust, scalable foundation for Snowflake data analysis with Cursor AI
-- **Scope:** Data exploration, analysis, profiling, and SQL development for Snowflake environments
-- **Stakeholders:** Data analysts, data engineers, business intelligence teams
+	I recently learned about a fraud technique called session replay from our device intelligence vendor, Darwinium (DWN).
+
+	In this scenario, a fraudster impersonates a Chime support agent and tricks a customer into logging into a fake website. The customer’s login credentials are then compromised. Using these stolen credentials, the fraudster extracts the authentication token and plugs it into an API tool (e.g., Postman). This bypasses the normal login process and gives direct access to the customer’s account.
+
+	Inside Postman, the fraudster can also manipulate device footprint information (e.g., device ID, model, etc.). With this setup, they can perform actions that normally require a mobile app login, such as offloading funds via P2P or OIT (outbound instant transfer through a linked debit card).
+
+	DWN has simulated this attack path and provided us with criteria to identify potential P2P offloading initiated via session replay. For example, the following query can capture such cases:
+
+	SELECT 
+	    t._DEVICE_ID,
+	    t._USER_ID,
+	    t._CREATION_TIMESTAMP,
+	    TRY_PARSE_JSON(t.body) AS body_json,
+	    body_json:step_name::varchar AS step_name,
+	    body_json:identifier::varchar AS identifier
+	FROM STREAMING_PLATFORM.SEGMENT_AND_HAWKER_PRODUCTION.DEVICE_EVENTS_V1_VENDOR_RESPONSE t
+	WHERE name = 'VENDOR_DARWINIUM'
+	  AND (body_json:profiling:replay_count > 1 
+	       AND body_json:profiling:secure_id:signals::varchar LIKE '%INVALID_NONCE%')
+	  AND body_json:step_name::varchar = 'p2p_transfer';
+
+
+	For this project, I’d like to do the following:
+
+	Use the SQL above to extract all P2P sessions that meet these criteria over the past two months.
+
+	Save the results into a table under risk.test.
+
+	In the next step, I’ll provide instructions on how to flag all P2P sessions in that table with a fraud indicator. The goal is to later evaluate the accuracy of this indicator.
 
 ## 2. Context & Background
 - Standardized starter kit for Snowflake development with Cursor AI
@@ -14,35 +40,48 @@
 - Supports both development and production workflows
 
 ## 3. Key Metrics & Definitions (Glossary)
-- `monthly_active_users`: unique users with >=1 session in last 30 days (exclude test accounts)
-- `net_revenue`: gross sales – refunds (excludes tax and shipping)
-- `churn_rate`: percentage of customers who stopped purchasing in the last 90 days
-- `avg_order_value`: total revenue / total orders for given time period
-- `customer_lifetime_value`: predicted total revenue from customer over relationship
-- `conversion_rate`: (completed purchases / website sessions) * 100
+
+- dispute rate(precision)
+- dispute cover rate(recall)
 
 ## 4. Data Contracts (Tables)
-| Object (DB.SCHEMA.TABLE) | Owner/Team | SLA | Columns | Notes |
-|--------------------------|------------|-----|---------|-------|
-| ANALYTICS.PUBLIC.demo_sales | Data Team | D+1 | id INT, amount NUMBER(10,2), city STRING, order_ts TIMESTAMP_NTZ, created_ts TIMESTAMP_NTZ | Demo table for testing |
-| ANALYTICS.PUBLIC.customers | Data Team | D+1 | customer_id, email, created_ts, updated_ts, status | Customer master data |
-| ANALYTICS.PUBLIC.orders | Data Team | D+1 | order_id, customer_id, amount, status, order_ts | Order transactions |
-| ANALYTICS.PUBLIC.order_items | Data Team | D+1 | order_id, product_id, quantity, unit_price | Order line items |
+
+### 4.1 Session Replay P2P Cases (`RISK.TEST.session_replay_p2p_cases`)
+**Purpose**: Raw session replay cases identified by Darwinium criteria
+- **Source**: `STREAMING_PLATFORM.SEGMENT_AND_HAWKER_PRODUCTION.DEVICE_EVENTS_V1_VENDOR_RESPONSE`
+- **Criteria**: `replay_count > 1` AND `INVALID_NONCE` signals AND `step_name = 'p2p_transfer'`
+- **Time window**: Past 60 days
+- **Records**: 22,366 cases
+- **Unique users**: 13,974
+- **Unique devices**: 13,958
+
+**Key fields**:
+- `device_id`, `user_id`, `creation_timestamp_utc`
+- `step_name`, `identifier`, `replay_count`, `secure_id_signals`
+- `body_json` (parsed Darwinium response), `raw_body`
+
+### 4.2 Session Replay Driver Table (`RISK.TEST.hding_dwn_p2p_session_replay_driver`)
+**Purpose**: Session replay cases enriched with decision platform data and fraud labels for accuracy evaluation
+- **Source**: Session replay cases + decision platform + dispute data
+- **Records**: 20,849 cases (filtered for decision platform matches)
+- **Fraud rate**: 0.24% (50/20,849 cases with actual fraud disputes)
+
+**Key fields**:
+- All fields from session replay cases
+- `decision_id`, `sender_user_id`, `original_timestamp`, `transfer_amount`
+- `dec_plat_decision` (allow/deny/OTP)
+- `fraud_dispute_ind` (0/1) - ground truth fraud label
+- `email_hash` (from PII dimension)
+
+**Decision platform distribution**:
+- Allow: 93.18% (19,427 cases)
+- Deny: 4.26% (888 cases)  
+- OTP: 2.56% (534 cases)
+
 
 ## 5. Naming Conventions
-- **Tables/views/columns**: `snake_case` (e.g., `customer_orders`, `order_total_amount`)
-- **Time columns**: `_dt` (date), `_ts` (timestamp), `_ym` (year-month), `_yw` (year-week)
-- **Temporary objects**: `exp_*` (experimental), `_stg` (staging), `_tmp` (temporary)
-- **Metrics/KPIs**: `metric_name` (e.g., `monthly_revenue`, `customer_count`)
-- **Fully qualified names**: `DATABASE.SCHEMA.OBJECT` for all shared objects
 
 ## 6. Warehouse & Cost Management
-- **XS/S warehouses**: Exploration, ad-hoc queries, development (<1GB data)
-- **M warehouses**: Regular reporting, moderate ETL (1-10GB data)
-- **L+ warehouses**: Heavy ETL, large aggregations (>10GB data)
-- **Default QUERY_TAG**: `cursor-analyst-starter`
-- **Cost thresholds**: Alert on queries >0.1 credits, review queries >0.5 credits
-- **Auto-suspend**: 1-2 minutes for cost efficiency
 
 ## 7. Validation Checklist
 - [ ] Row counts match expectations (validate against source systems)
@@ -83,12 +122,59 @@
 - **Keep it simple**: Everything in one daily file - no complex subfolders
 
 ## 12. Known Issues / Decisions
-- **2025-01-15**: Implemented MDC best practices for SQL style and safety
-- **2025-01-15**: Added comprehensive data profiling and cost monitoring tools
-- **2025-01-15**: Established query header format for better documentation
-- **2025-08-19**: Added simple daily logging system (logs/YYYY-MM-DD.md format)
-- **Cost optimization**: Always provide preview queries for operations on large tables
-- **Performance**: Use QUALIFY instead of DISTINCT with window functions where possible
+
+### 12.1 Session Replay Model Performance Analysis (2025-08-19)
+
+#### **Current Performance (Baseline)**
+- **Precision**: 0.24% (50/20,849 flagged cases are actual fraud)
+- **Recall**: 50 fraud cases caught out of unknown total fraud universe
+- **False Positive Rate**: 99.76% of flagged cases are not fraud
+- **Decision Platform Overlap**: 94% of fraud cases still allowed, only 6% got OTP step-up
+
+#### **Key Discriminative Features Discovered**
+
+**1. Transfer Amount Patterns**
+- **Fraud cases**: Higher average ($157.54 vs $67.76) but similar median ($29 vs $25)
+- **High-value fraud concentration**: Fraud cases cluster in $100-$1000+ ranges
+- **Recommendation**: Add transfer amount thresholds to reduce low-value false positives
+
+**2. Step Number Analysis (Major Finding)**
+- **Fraud cases**: Average 9.2 steps vs 4.73 steps for non-fraud
+- **Insight**: Fraud cases go through significantly more process steps
+- **Recommendation**: Use step_number ≥ 8 as additional criterion
+
+**3. Secure ID Signal Patterns**
+- **Two fraud patterns identified**:
+  - `["EXISTING_KEY","INVALID_NONCE"]`: 30 cases, $216.89 avg, 4.43 replay count
+  - `["INVALID_NONCE","MISSING_PUBLIC_KEY","MISSING_SIGNATURE"]`: 20 cases, $68.51 avg, 15.95 replay count
+- **Recommendation**: MISSING_PUBLIC_KEY signals show potential for higher precision
+
+**4. Replay Count Distribution**
+- **Fraud cases**: More concentrated in higher replay counts (15+ range)
+- **Non-fraud**: More distributed across 2-12 range
+- **Recommendation**: Increase replay count threshold to ≥10 for higher precision
+
+#### **Improved Rule Recommendations**
+
+**High-Precision Rule (10x Improvement)**
+- **Criteria**: `replay_count ≥ 10 AND secure_id_signals LIKE '%MISSING_PUBLIC_KEY%'`
+- **Performance**: 2.15% precision (vs 0.20% current) - **10x improvement**
+- **Coverage**: Catches 9/50 fraud cases (18% of fraud volume)
+- **Volume**: 419 cases flagged vs 20,849 current
+
+**Balanced Rule (Recommended)**
+- **Criteria**: `(replay_count ≥ 8 AND transfer_amount ≥ 200) OR (step_number ≥ 8 AND secure_id_signals LIKE '%MISSING%')`
+- **Expected**: 3-5x precision improvement while maintaining higher recall
+
+**Conservative Rule (Maximum Precision)**
+- **Criteria**: `replay_count ≥ 15 AND transfer_amount ≥ 500`
+- **Expected**: Very high precision but lower recall
+
+#### **Implementation Recommendations**
+1. **Phase 1**: Implement high-precision rule as A/B test
+2. **Phase 2**: Develop step_number and amount-based composite scoring
+3. **Phase 3**: Create tiered alerting based on risk score combinations
+4. **Monitor**: Weekly precision/recall metrics by rule variant
 
 ## 13. Emergency Procedures
 - **Runaway queries**: Use `SYSTEM$CANCEL_QUERY()` or warehouse suspension
@@ -97,7 +183,3 @@
 - **Schema changes**: Always test in DEV, provide rollback strategy
 
 ## 14. Contact Information
-- **Data Team Lead**: [Your Name] - [email]
-- **Snowflake Admin**: [Admin Name] - [email]  
-- **Escalation**: [Manager Name] - [email]
-

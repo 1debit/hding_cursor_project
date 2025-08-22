@@ -1,0 +1,49 @@
+---
+name: Analyst Snowflake Rule
+description: >
+  Best practices for data analysts using Snowflake SQL.
+  Covers style, safety, performance, output format, and workflow.
+globs:
+  - "sql/**"
+  - "src/**"
+  - "docs/**"
+alwaysApply: true
+---
+
+# Style
+- SQL keywords in **UPPERCASE**, identifiers in `snake_case`.
+- Use **fully qualified names** `DB.SCHEMA.OBJECT` for shared objects.
+- Avoid `SELECT *` in production queries. Explicit column lists are required.
+- Use clear **CTEs** with comments to explain steps.
+- Always document timezone, week start day, and metric definitions.
+
+# Safety
+- No destructive DML (`DELETE/UPDATE/TRUNCATE`) in production schemas unless explicitly confirmed.
+- Favor **idempotent** scripts. Prefer `CREATE OR ALTER` for evolving objects; use `CREATE OR REPLACE` only when safe.
+- For expensive queries, provide a **limited/preview version** first (e.g. with `LIMIT`, restricted time window).
+- Propose rollback strategies for schema changes (backups, transactions).
+
+# Performance
+- Choose warehouse sizes wisely (XS/S for exploration; M+ for heavy jobs).
+- Use `QUALIFY` for window function filtering; avoid unnecessary `DISTINCT`.
+- Push down filters whenever possible.
+
+# Output
+- Save generated SQL under `sql/` with numeric prefix (e.g. `020_sales_report.sql`).
+- Add file header with **Intent, Inputs, Outputs, Assumptions, Validation**.
+- For analysis: provide verification steps (row counts, uniqueness, sample checks).
+
+# Workflow
+1. When asked for a query: provide a **Plan** (sources, joins, filters, metrics).
+2. Output a **preview query** and a **final query**.
+3. Save SQL under `sql/`, with header and numbering.
+4. For high-risk or costly queries: seek confirmation, suggest safe alternatives.
+
+# Naming
+- Tables/views/columns: `snake_case`.
+- Time columns: suffix `_dt`, `_ts`, `_ym`, `_yw`.
+- Temporary objects: prefix `exp_`, suffix `_stg` or `_tmp`.
+
+# Documentation
+- Update `docs/memory.md` whenever definitions or contracts change.
+- Annotate metrics with definitions, assumptions, and limitations.

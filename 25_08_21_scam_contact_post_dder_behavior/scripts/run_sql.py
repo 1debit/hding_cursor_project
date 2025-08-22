@@ -1,7 +1,7 @@
 import sys, pathlib
 from typing import List
-from sqlalchemy import text
 from src.sf_client import get_connection
+from sqlalchemy import text
 
 def split_sql(statements: str) -> List[str]:
     parts, current, in_str = [], [], False
@@ -39,14 +39,11 @@ def main():
             print(f"--- [{i}/{len(stmts)}] {preview}{'...' if len(stmt)>120 else ''}")
             result = conn.execute(text(stmt))
             try:
-                if result.returns_rows:
-                    rows = result.fetchmany(5)
-                    if rows:
-                        print(f"  returned {len(rows)} rows (showing up to 5): {rows}")
-                else:
-                    print(f"  statement executed successfully")
-            except Exception as e:
-                print(f"  statement executed (no rows returned): {e}")
+                rows = result.fetchmany(5)
+                if rows:
+                    print(f"  returned {len(rows)} rows (showing up to 5): {rows}")
+            except Exception:
+                pass
         print("Done ✅")
     finally:
         conn.close()
