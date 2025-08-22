@@ -7,7 +7,7 @@ A comprehensive Snowflake analysis project quantifying customer behavioral chang
 ### 📊 Final Analysis Outcomes
 - **Population Identified**: 96,769 confirmed scam victims (2024-11-01 to 2025-04-30)
 - **Methodology**: Advanced text mining approach (100x faster than Cortex AI)
-- **Annual Business Impact**: 47,624 behavioral churns quantified
+- **Annual DDer Impact**: 12,518 DDer churns quantified (primary focus)
 - **Strategic Insights**: Scam victims are premium customers with higher baseline engagement
 
 ### 💰 Behavioral Impact Analysis
@@ -113,11 +113,11 @@ M1 Churn Analysis (34-67 days post-scam):
 
 ### Business Impact Quantification
 ```
-Annual Churn Impact (Extrapolated):
-• DDer Behavior: 12,518 churned users
-• Funder Behavior: 19,054 churned users  
-• Purchaser Behavior: 16,052 churned users
-• Total Annual Impact: 47,624 behavioral churns
+Annual DDer Impact (Primary Focus):
+• DDer Behavior: 12,518 churned users (main business concern)
+• Context - Funder Behavior: 19,054 churned users  
+• Context - Purchaser Behavior: 16,052 churned users
+• Primary Business Impact: 12,518 DDer churns
 
 Strategic Implications:
 • Scam victims = premium customer segment (higher baseline engagement)
@@ -220,4 +220,4 @@ python scripts/setup_check.py --skip-connection
 
 ---
 
-> ✅ **Project Status**: COMPLETED successfully with 47,624 annual behavioral churns quantified and strategic recommendations delivered. This analysis demonstrates the power of efficient text mining techniques combined with robust behavioral analysis methodologies.
+> ✅ **Project Status**: COMPLETED successfully with 12,518 annual DDer churns quantified and strategic recommendations delivered. This analysis demonstrates the power of efficient text mining techniques combined with robust behavioral analysis methodologies.
