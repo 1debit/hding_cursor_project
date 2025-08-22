@@ -81,12 +81,10 @@ def execute_query(query: str, database: str = None, schema: str = None) -> pd.Da
     Returns:
         pandas.DataFrame with query results
     """
+    from sqlalchemy import text
+    
     engine = get_pandas_connection()
     
-    try:
-        # Use pandas read_sql directly with the engine
-        return pd.read_sql(query, engine)
-    except Exception as e:
-        # If that fails, try with a connection
-        with engine.connect() as conn:
-            return pd.read_sql(query, conn)
+    # Use connection with text() wrapper for proper SQLAlchemy execution
+    with engine.connect() as conn:
+        return pd.read_sql(text(query), conn)
