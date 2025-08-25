@@ -43,12 +43,12 @@ A comprehensive Snowflake analysis project quantifying customer behavioral chang
 │   ├── monitor_queries.py  # Monitor query performance
 │   └── setup_check.py      # Verify setup completion
 ├── sql/                     # Production SQL files (numeric prefixes)
-│   ├── 040_scam_sample_for_analysis.sql           # Sample extraction
-│   ├── 050_text_mining_rules_analysis.sql        # Pattern development
-│   ├── 060_scam_victims_text_mining_final.sql    # Final victim identification
-│   ├── 070_scam_victims_with_dder_indicators.sql # DDer behavior analysis
-│   ├── 080_scam_victims_complete_behavioral_indicators.sql # Full behavioral
-│   └── 090_benchmark_population_behavioral_analysis.sql   # Benchmark comparison
+│   ├── 040_scam_sample_for_analysis.sql           # Sample extraction (1K conversations)
+│   ├── 050_text_mining_rules_analysis.sql        # Pattern development & validation
+│   ├── 060_scam_victims_text_mining_final.sql    # Final victim identification (96,769 users)
+│   ├── 070_scam_victims_with_dder_indicators.sql # DDer behavior analysis (M0/M1)
+│   ├── 080_scam_victims_complete_behavioral_indicators.sql # Complete behavioral analysis
+│   └── 090_benchmark_population_behavioral_analysis.sql   # Benchmark comparison (1.65M users)
 ├── docs/                    # Project documentation and memory
 │   └── memory.md           # Comprehensive project documentation
 ├── logs/                   # Daily progress logs
@@ -125,78 +125,11 @@ Strategic Implications:
 • Spending behaviors show resilience (-6.5pp, -8.9pp better retention)
 ```
 
-## 📚 Best Practices Integration
-
-### SQL Development with Cursor
-1. **Ask Cursor to generate queries** following MDC standards
-2. **Use proper SQL headers** (automatically enforced by rules)
-3. **Always estimate costs** before running expensive queries
-4. **Profile tables** before writing complex joins
-
-### Cost Optimization
-- Use **XS/S warehouses** for exploration and development
-- **Estimate query costs** before execution with large datasets
-- **Monitor query performance** regularly to identify optimization opportunities
-- **Use QUALIFY** instead of DISTINCT with window functions
-
-### Security & Governance
-- **Never commit** `.env` files or credentials
-- **Use private key authentication** for production environments
-- **Tag all queries** with appropriate QUERY_TAG for tracking
-- **Follow environment separation** practices (DEV/TEST/PROD)
-
-## 🔧 Configuration Options
-
-### Environment Variables (.env)
-```bash
-# Connection Settings
-SNOWFLAKE_ACCOUNT=your_account.region.snowflakecomputing.com
-SNOWFLAKE_USER=your_username
-SNOWFLAKE_ROLE=ANALYST_ROLE
-SNOWFLAKE_WAREHOUSE=COMPUTE_WH
-SNOWFLAKE_DATABASE=ANALYTICS
-SNOWFLAKE_SCHEMA=PUBLIC
-
-# Authentication (choose one)
-SNOWFLAKE_PASSWORD=your_password
-# OR
-SNOWFLAKE_PRIVATE_KEY_PATH=~/.ssh/snowflake_rsa_key.p8
-SNOWFLAKE_PRIVATE_KEY_PASSPHRASE=your_passphrase
-
-# Optional Settings
-QUERY_TAG=cursor-analyst-starter
-```
-
-### Warehouse Sizing Guidelines
-- **X-SMALL/SMALL**: Development, exploration, small datasets (< 1GB)
-- **MEDIUM**: Regular reporting, moderate ETL (1-10GB)
-- **LARGE+**: Heavy ETL, large aggregations, production workloads (> 10GB)
-
 ## 📖 Documentation
 
-- **[Project Memory](docs/memory.md)**: Comprehensive project documentation, metrics definitions, and best practices
-- **[MDC Rules](.cursor/rules/snowflake_mdc.md)**: Detailed Snowflake development standards and guidelines
-- **[SQL Examples](sql/)**: Sample SQL files following best practices
-
-## 🚨 Troubleshooting
-
-### Common Issues
-1. **Connection failures**: Check `.env` configuration and network connectivity
-2. **Import errors**: Ensure virtual environment is activated and dependencies installed
-3. **Permission errors**: Verify Snowflake role has necessary privileges
-4. **High query costs**: Use cost estimator before running expensive operations
-
-### Getting Help
-```bash
-# Verify complete setup
-python scripts/setup_check.py
-
-# Test connection with detailed output
-python scripts/test_connection.py
-
-# Check for any configuration issues
-python scripts/setup_check.py --skip-connection
-```
+- **[Project Memory](docs/memory.md)**: Comprehensive project documentation, metrics definitions, and key decisions
+- **[Daily Logs](logs/)**: Progress tracking and milestone documentation  
+- **[Production SQL](sql/)**: Final SQL files with numeric ordering (040-090)
 
 ## 🎯 Strategic Recommendations
 
