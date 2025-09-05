@@ -44,17 +44,18 @@ Analyze how fraudsters use MuMuPlayer Android emulator to bypass Chime's virtual
 - [x] User 86963958 identification via Penny
 - [x] Login data table creation and structure
 - [x] Network carrier analysis framework
-- [x] Initial country mapping (20+ carriers)
+- [x] Network carrier country mapping completion
+- [x] Network vs IP carrier mismatch analysis
+- [x] Emulator detection pattern identification
+- [x] Darwinium device signal analysis
+- [x] Comprehensive MOB distribution analysis
+- [x] Data visualization and reporting
 
-### 🔄 In Progress
-- [ ] Network carrier country mapping completion (700+ carriers)
-- [ ] Network vs IP carrier mismatch analysis
-- [ ] Emulator detection pattern identification
-
-### 📋 Planned
-- [ ] Darwinium device signal analysis
-- [ ] Comprehensive emulator detection methodology
-- [ ] Case study report and recommendations
+### 🔍 Key Discoveries
+- **Network Carrier vs IP Mismatch**: Taiwan network carriers with USA IP addresses
+- **MOB Pattern Analysis**: Taiwan users show 67.2% new accounts vs 9.1% for US users
+- **Device Intelligence Mapping**: Low DWN data coverage for foreign carriers
+- **User Status Patterns**: High inactive user rates for foreign network carriers
 
 ## 🗂️ Project Structure
 
@@ -102,6 +103,23 @@ projects/2025_09_02_tpi_mumuplay_emulator/
 - Login data table creation
 - Network carrier analysis framework setup
 - Initial country mapping implementation
+
+### 2025-09-05
+- **MOB Distribution Analysis**: Completed comprehensive analysis comparing US vs Taiwan network carriers
+- **Data Completeness Fix**: Resolved critical error where 12+ months users were excluded from analysis
+- **Visualization Update**: Created final pie charts with proper categorization and descriptive titles
+- **Key Learning**: Always include comprehensive MOB categories (0, 1-3, 4-6, 7-12, 12+) to avoid distorted percentages
+- **Project Status**: Analysis phase complete, ready for leadership review
+
+## 🎯 Final Results Summary
+
+### Critical Findings
+- **US Network Carrier**: 9.1% new users (0 months), 67.1% established users (12+ months) - **Normal healthy pattern**
+- **Taiwan Network Carrier**: 67.2% new users (0 months), 12.9% established users (12+ months) - **Highly suspicious pattern**
+- **Taiwan Inactive Users**: 79.4% new users (0 months) - **Extremely suspicious fraud indicator**
+
+### Business Impact
+This analysis provides strong evidence of emulator-based fraud patterns through network carrier vs IP country mismatches and abnormal new user concentration patterns.
 
 ---
 
