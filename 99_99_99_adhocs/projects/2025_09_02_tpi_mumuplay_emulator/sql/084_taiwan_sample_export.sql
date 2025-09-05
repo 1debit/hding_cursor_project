@@ -3,7 +3,7 @@
 -- Inputs: RISK.TEST.all_logins_with_dwn, chime.finance.members
 -- Output: Complete sample data for Taiwan users
 
--- Taiwan Active Low MOB Users Complete Sample
+-- Taiwan Active Low MOB Users Complete Sampl a threade
 SELECT
     a.user_id,
     a.network_carrier,

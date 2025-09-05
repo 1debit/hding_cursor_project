@@ -43,18 +43,28 @@ env/
 # Jupyter Notebook
 .ipynb_checkpoints
 
-# Data files (often large and sensitive)
-*.csv
+# Data files (often large and sensitive) - but allow project-specific files
+# Note: GitHub allows files up to 1GB, project files are typically under this limit
 *.parquet
 *.json
-*.xlsx
-*.xls
 data/
 exports/
 downloads/
 
-# Logs
+# Allow project CSV files (up to 1GB)
+*.csv
+!projects/*/files/*.csv
+!projects/*/files/Carrier_Mapping*.csv
+
+# Allow project Excel files (up to 1GB)
+*.xlsx
+*.xls
+!projects/*/files/*.xlsx
+!projects/*/files/*.xls
+
+# Logs - allow project logs but exclude system logs
 logs/
+!projects/*/logs/
 *.log
 
 # Temporary files
@@ -62,6 +72,15 @@ tmp/
 temp/
 .tmp/
 *.tmp
+
+# Allow project outputs (visualizations, reports) - up to 1GB
+!projects/*/outputs/
+!projects/*/outputs/*.png
+!projects/*/outputs/*.jpg
+!projects/*/outputs/*.pdf
+!projects/*/outputs/*.xlsx
+!projects/*/outputs/*.xls
+!projects/*/outputs/*.csv
 
 # OS generated files
 .DS_Store
