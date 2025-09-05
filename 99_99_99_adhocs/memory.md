@@ -57,6 +57,14 @@ If unsure about categorization, ask the user for clarification.
 - **Test joins with sample data** before full table operations
 - **Always include data quality checks** in analysis workflows
 
+### CRITICAL: Git Operations Safety
+- **NEVER use `git reset --hard`** without explicit user permission - this DESTROYS files permanently
+- **ALWAYS backup important files** before any destructive git operations
+- **Ask user before any git reset operations** - even if trying to fix push issues
+- **Use `git reset --soft` or `git checkout`** instead of hard resets when possible
+- **If files are lost, immediately check `git reflog`** to find recovery commit
+- **User's data is PRECIOUS** - treat every file as irreplaceable until confirmed otherwise
+
 ## Project Workflow Protocol
 
 When starting work on a specific project:
