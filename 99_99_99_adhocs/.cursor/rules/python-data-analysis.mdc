@@ -1,0 +1,392 @@
+---
+name: Python Data Analysis Best Practices
+description: >
+  Comprehensive Python best practices for data analysts.
+  Covers code formatting, quality, pseudocode, and data analysis workflows.
+globs:
+  - "**/*.py"
+  - "scripts/**"
+  - "project/**"
+alwaysApply: true
+---
+
+# Code Formatting and Quality
+
+## Code Style Standards
+- **Formatter**: Use Black with line length 88 characters
+- **Import sorting**: Use isort with Black profile
+- **Linting**: Use ruff for fast linting and auto-fixing
+- **Type hints**: Use type hints for function parameters and return values
+- **Docstrings**: Use Google-style docstrings for functions and classes
+
+## Example Code Structure
+```python
+from typing import List, Dict, Optional, Tuple
+import pandas as pd
+import numpy as np
+from pathlib import Path
+
+def analyze_user_behavior(
+    user_data: pd.DataFrame,
+    date_range: Tuple[str, str],
+    output_path: Optional[Path] = None
+) -> Dict[str, float]:
+    """
+    Analyze user behavior patterns within a date range.
+
+    Args:
+        user_data: DataFrame with user activity data
+        date_range: Tuple of (start_date, end_date) in YYYY-MM-DD format
+        output_path: Optional path to save results
+
+    Returns:
+        Dictionary with key metrics (avg_sessions, retention_rate, etc.)
+
+    Raises:
+        ValueError: If date_range is invalid or user_data is empty
+    """
+    # Input validation
+    if user_data.empty:
+        raise ValueError("user_data cannot be empty")
+
+    # Data processing logic here
+    start_date, end_date = date_range
+    filtered_data = user_data[
+        (user_data['date'] >= start_date) &
+        (user_data['date'] <= end_date)
+    ]
+
+    # Calculate metrics
+    metrics = {
+        'avg_sessions': filtered_data['sessions'].mean(),
+        'retention_rate': calculate_retention(filtered_data),
+        'total_users': filtered_data['user_id'].nunique()
+    }
+
+    # Save results if path provided
+    if output_path:
+        save_results(metrics, output_path)
+
+    return metrics
+```
+
+# Data Analysis Workflow Patterns
+
+## Pseudocode Structure for Data Analysis
+```python
+# PSEUDOCODE TEMPLATE FOR DATA ANALYSIS
+def analyze_data_question(question: str) -> Dict:
+    """
+    Standard pseudocode structure for data analysis tasks.
+
+    PSEUDOCODE:
+    1. UNDERSTAND: What is the business question?
+    2. EXPLORE: What data sources are available?
+    3. PREPARE: Clean and validate the data
+    4. ANALYZE: Apply statistical methods and calculations
+    5. INTERPRET: What do the results mean?
+    6. COMMUNICATE: How to present findings?
+    """
+
+    # STEP 1: UNDERSTAND THE QUESTION
+    # - Clarify business objectives
+    # - Define success metrics
+    # - Identify constraints and assumptions
+
+    # STEP 2: EXPLORE DATA SOURCES
+    # - Identify relevant tables/APIs
+    # - Check data quality and completeness
+    # - Understand data relationships
+
+    # STEP 3: PREPARE DATA
+    # - Load and validate data
+    # - Handle missing values
+    # - Create derived features
+    # - Apply business rules
+
+    # STEP 4: ANALYZE
+    # - Apply statistical methods
+    # - Create visualizations
+    # - Test hypotheses
+    # - Calculate key metrics
+
+    # STEP 5: INTERPRET RESULTS
+    # - Validate findings
+    # - Check for anomalies
+    # - Consider alternative explanations
+    # - Assess confidence levels
+
+    # STEP 6: COMMUNICATE
+    # - Create clear visualizations
+    # - Write executive summary
+    # - Document methodology
+    # - Provide actionable insights
+
+    pass
+```
+
+## Data Loading and Validation Patterns
+```python
+def load_and_validate_data(
+    file_path: Path,
+    expected_columns: List[str],
+    date_columns: Optional[List[str]] = None
+) -> pd.DataFrame:
+    """
+    Standard pattern for loading and validating data files.
+
+    PSEUDOCODE:
+    1. Load data with error handling
+    2. Check required columns exist
+    3. Validate data types
+    4. Check for missing values
+    5. Validate date formats if applicable
+    6. Return cleaned DataFrame
+    """
+    try:
+        # Load data with appropriate method
+        if file_path.suffix == '.csv':
+            df = pd.read_csv(file_path)
+        elif file_path.suffix == '.parquet':
+            df = pd.read_parquet(file_path)
+        else:
+            raise ValueError(f"Unsupported file format: {file_path.suffix}")
+
+        # Validate required columns
+        missing_cols = set(expected_columns) - set(df.columns)
+        if missing_cols:
+            raise ValueError(f"Missing required columns: {missing_cols}")
+
+        # Validate data types and formats
+        if date_columns:
+            for col in date_columns:
+                df[col] = pd.to_datetime(df[col], errors='coerce')
+                if df[col].isna().any():
+                    print(f"Warning: Invalid dates found in {col}")
+
+        # Data quality checks
+        print(f"Data loaded: {len(df)} rows, {len(df.columns)} columns")
+        print(f"Missing values: {df.isnull().sum().sum()}")
+
+        return df
+
+    except Exception as e:
+        print(f"Error loading data: {e}")
+        raise
+```
+
+# Error Handling and Logging
+
+## Robust Error Handling
+```python
+import logging
+from functools import wraps
+
+# Configure logging
+logging.basicConfig(
+    level=logging.INFO,
+    format='%(asctime)s - %(name)s - %(levelname)s - %(message)s',
+    handlers=[
+        logging.FileHandler('analysis.log'),
+        logging.StreamHandler()
+    ]
+)
+
+def handle_analysis_errors(func):
+    """Decorator for robust error handling in data analysis functions."""
+    @wraps(func)
+    def wrapper(*args, **kwargs):
+        try:
+            result = func(*args, **kwargs)
+            logging.info(f"Successfully completed {func.__name__}")
+            return result
+        except Exception as e:
+            logging.error(f"Error in {func.__name__}: {str(e)}")
+            # Return empty result or re-raise based on context
+            raise
+    return wrapper
+
+@handle_analysis_errors
+def calculate_metrics(data: pd.DataFrame) -> Dict:
+    """Example function with error handling."""
+    if data.empty:
+        raise ValueError("Cannot calculate metrics on empty data")
+
+    # Analysis logic here
+    return {"metric1": 0.5, "metric2": 100}
+```
+
+# Performance Optimization
+
+## Efficient Data Processing
+```python
+def optimize_dataframe_operations(df: pd.DataFrame) -> pd.DataFrame:
+    """
+    PSEUDOCODE FOR DATAFRAME OPTIMIZATION:
+    1. Use vectorized operations instead of loops
+    2. Avoid chained indexing (.loc[].loc[])
+    3. Use appropriate data types (category, int32, float32)
+    4. Leverage pandas built-in functions
+    5. Consider chunking for large datasets
+    """
+
+    # Convert object columns to category if low cardinality
+    for col in df.select_dtypes(include=['object']).columns:
+        if df[col].nunique() / len(df) < 0.5:  # Less than 50% unique values
+            df[col] = df[col].astype('category')
+
+    # Use efficient data types
+    df = df.astype({
+        'user_id': 'int32',
+        'amount': 'float32',
+        'is_active': 'bool'
+    })
+
+    # Use vectorized operations
+    df['revenue_per_user'] = df['total_revenue'] / df['user_count']
+
+    return df
+```
+
+# Visualization Best Practices
+
+## Standard Visualization Patterns
+```python
+import matplotlib.pyplot as plt
+import seaborn as sns
+from typing import List, Optional
+
+def create_analysis_dashboard(
+    data: pd.DataFrame,
+    metrics: List[str],
+    title: str,
+    save_path: Optional[Path] = None
+) -> None:
+    """
+    PSEUDOCODE FOR CREATING ANALYSIS DASHBOARD:
+    1. Set up figure with subplots
+    2. Create time series plots for trends
+    3. Add distribution plots for key metrics
+    4. Include summary statistics
+    5. Apply consistent styling
+    6. Save with high resolution
+    """
+
+    # Set up the plotting style
+    plt.style.use('seaborn-v0_8')
+    fig, axes = plt.subplots(2, 2, figsize=(15, 10))
+    fig.suptitle(title, fontsize=16, fontweight='bold')
+
+    # Time series plot
+    axes[0, 0].plot(data['date'], data['metric1'])
+    axes[0, 0].set_title('Trend Over Time')
+    axes[0, 0].set_xlabel('Date')
+    axes[0, 0].set_ylabel('Metric 1')
+
+    # Distribution plot
+    axes[0, 1].hist(data['metric2'], bins=30, alpha=0.7)
+    axes[0, 1].set_title('Distribution of Metric 2')
+    axes[0, 1].set_xlabel('Value')
+    axes[0, 1].set_ylabel('Frequency')
+
+    # Correlation heatmap
+    corr_data = data[metrics].corr()
+    sns.heatmap(corr_data, annot=True, ax=axes[1, 0], cmap='coolwarm')
+    axes[1, 0].set_title('Metric Correlations')
+
+    # Summary statistics
+    summary_stats = data[metrics].describe()
+    axes[1, 1].axis('off')
+    axes[1, 1].table(
+        cellText=summary_stats.round(2).values,
+        rowLabels=summary_stats.index,
+        colLabels=summary_stats.columns,
+        cellLoc='center',
+        loc='center'
+    )
+    axes[1, 1].set_title('Summary Statistics')
+
+    plt.tight_layout()
+
+    if save_path:
+        plt.savefig(save_path, dpi=300, bbox_inches='tight')
+
+    plt.show()
+```
+
+# Project Organization
+
+## File Structure for Data Analysis Projects
+```
+project/
+├── data/                    # Raw and processed data
+│   ├── raw/                # Original data files
+│   ├── processed/          # Cleaned and transformed data
+│   └── external/           # External data sources
+├── notebooks/              # Jupyter notebooks for exploration
+├── scripts/                # Python scripts for analysis
+│   ├── data_processing.py  # Data cleaning and transformation
+│   ├── analysis.py         # Main analysis functions
+│   └── visualization.py    # Plotting and dashboard functions
+├── config/                 # Configuration files
+│   ├── settings.yaml       # Project settings
+│   └── logging.conf        # Logging configuration
+├── tests/                  # Unit tests
+├── docs/                   # Documentation
+└── outputs/                # Results and reports
+    ├── figures/            # Generated plots
+    ├── tables/             # Summary tables
+    └── reports/            # Final reports
+```
+
+# Documentation Standards
+
+## Function Documentation Template
+```python
+def analyze_customer_segments(
+    customer_data: pd.DataFrame,
+    segment_criteria: Dict[str, Any],
+    min_segment_size: int = 100
+) -> Tuple[pd.DataFrame, Dict[str, float]]:
+    """
+    Analyze customer segments based on behavioral and demographic criteria.
+
+    This function segments customers into groups based on specified criteria
+    and calculates key metrics for each segment. It's designed for marketing
+    campaign targeting and customer lifetime value analysis.
+
+    Args:
+        customer_data: DataFrame containing customer information with columns:
+            - customer_id: Unique customer identifier
+            - purchase_amount: Total purchase amount
+            - purchase_frequency: Number of purchases
+            - last_purchase_date: Date of most recent purchase
+            - demographics: Customer demographic information
+        segment_criteria: Dictionary defining segmentation rules:
+            - 'high_value': customers with purchase_amount > threshold
+            - 'frequent': customers with purchase_frequency > threshold
+            - 'recent': customers with recent activity
+        min_segment_size: Minimum number of customers required for a valid segment
+
+    Returns:
+        Tuple containing:
+            - segment_analysis: DataFrame with segment assignments and metrics
+            - segment_summary: Dictionary with segment sizes and key statistics
+
+    Raises:
+        ValueError: If customer_data is empty or missing required columns
+        ValueError: If any segment has fewer than min_segment_size customers
+
+    Example:
+        >>> criteria = {'high_value': 1000, 'frequent': 5}
+        >>> segments, summary = analyze_customer_segments(customers, criteria)
+        >>> print(f"High value customers: {summary['high_value_count']}")
+
+    Note:
+        This function assumes customer_data has been pre-processed and
+        contains no duplicate customer_ids. Missing values in key columns
+        will result in customers being excluded from segmentation.
+    """
+    # Implementation here
+    pass
+```

@@ -1,22 +1,37 @@
-# Session Replay P2P Fraud Detection Analysis
+# Session Replay P2P Fraud Detection Analysis + Network Carrier Mapping
 
-A comprehensive analysis of session replay attack patterns in P2P transfers using Darwinium device intelligence data to optimize fraud detection rules and reduce false positives.
+A comprehensive analysis of session replay attack patterns in P2P transfers using Darwinium device intelligence data to optimize fraud detection rules and reduce false positives, plus a breakthrough network carrier mapping project using AI-assisted research methodology.
 
-## 🎯 Project Objective
+## 🎯 Project Objectives
 
+### **Primary: Session Replay Fraud Detection**
 Evaluate and improve the effectiveness of Darwinium's session replay detection for P2P transfer fraud, specifically focusing on:
 - Analyzing current rule performance (replay_count > 1 + INVALID_NONCE)
 - Identifying discriminative features from DWN JSON data
 - Developing high-precision alternatives to reduce false positive rates
 - Providing actionable recommendations for production implementation
 
+### **Secondary: Network Carrier Mapping**
+Create comprehensive network carrier to country code mapping for login data analysis using AI-assisted research methodology:
+- Extract distinct network carriers from login data
+- Leverage ChatGPT-5 for comprehensive carrier research
+- Achieve superior mapping coverage with 3-character country codes
+- Create enriched login table for country-level analysis
+
 ## 📊 Key Findings Summary
 
-### **Current State Analysis (60-day period)**
+### **Session Replay Analysis (60-day period)**
 - **Total Allowed P2P Volume**: $1,135,775 (19,427 transactions)
 - **Current Rule Performance**: 0.58% precision (by amount), 99.42% false positive rate
 - **Fraud Rate**: 0.24% by count, 0.58% by amount ($6,577 fraud amount)
 - **Decision Platform Coverage**: 93.18% allowed, 6.82% denied/OTP (existing rules handle non-allowed cases)
+
+### **Network Carrier Mapping Results**
+- **Total Login Records**: 17,331,716
+- **Mapping Coverage**: 68.44% (11,862,330 records mapped)
+- **Carriers Mapped**: 315 comprehensive carriers
+- **Country Codes**: 3-character format (USA, TWN, UNK, etc.)
+- **Methodology**: AI-assisted research via ChatGPT-5 (vs manual mapping 30.70% coverage)
 
 ### **🔍 Major Discovery: Step Number Pattern**
 **Breakthrough Finding**: Fraudsters require **2x more UI navigation steps** (9.64 vs 4.68 average steps)
@@ -48,7 +63,7 @@ Evaluate and improve the effectiveness of Darwinium's session replay detection f
 
 ## 📁 Data Assets Created
 
-### **Tables Built**
+### **Session Replay Tables**
 1. **`RISK.TEST.session_replay_p2p_cases`** (22,366 records)
    - Raw session replay cases identified by DWN criteria
    - 60-day historical data with parsed JSON fields
@@ -59,13 +74,38 @@ Evaluate and improve the effectiveness of Darwinium's session replay detection f
    - Ground truth fraud indicators from dispute data
    - Ready for A/B testing and model development
 
+### **Network Carrier Mapping Tables**
+3. **`RISK.TEST.network_carrier_country_mapping_v2`** (315 carriers)
+   - Comprehensive carrier to country mapping using AI research
+   - 3-character country codes (USA, TWN, UNK, etc.)
+   - Source: ChatGPT-5 research + `Carrier_Mapping__Alpha-3_.csv`
+
+4. **`RISK.TEST.hding_a3id_login_info_enriched`** (17,331,716 records)
+   - Original login data enriched with country codes and regions
+   - 68.44% mapping coverage (11.86M records mapped)
+   - Ready for country-level analysis and geographic insights
+
 ### **SQL Analysis Files**
+**Session Replay Analysis:**
 - `030_extract_session_replay_p2p.sql` - Data extraction and labeling pipeline
 - `040_fraud_rate_dwn_signal_analysis.sql` - Weekly trends and signal analysis
 - `041_targeted_fraud_pattern_analysis.sql` - Fraud case deep dive
 - `042_profiling_deep_dive_recommendations.sql` - Rule optimization analysis
 - `050_allowed_focused_funnel_analysis.sql` - Allowed cases funnel analysis
 - `051_step_number_analysis_and_precise_metrics.sql` - Detailed rule performance metrics
+
+**Network Carrier Mapping:**
+- `060_network_carrier_mapping.sql` - Initial carrier extraction and mapping
+- `061_unmapped_carriers_analysis.sql` - Coverage analysis and gap identification
+- `062_comprehensive_carrier_mapping.sql` - Manual mapping attempt (superseded)
+- `063_final_carrier_mapping_with_validation.sql` - CSV-based comprehensive mapping
+- `064_fix_empty_carrier_mapping.sql` - Empty value handling and coverage validation
+- `065_carrier_statistics_summary.sql` - Final statistics and coverage metrics
+- `066_show_mapping_table.sql` - Mapping table structure and contents
+- `067_final_login_table_with_mapping.sql` - Enriched login table creation
+- `068_proper_carrier_mapping_from_csv.sql` - Superior CSV-based approach implementation
+- `069_cleanup_and_rename_tables.sql` - Table cleanup and standardization
+- `070_cleanup_country_codes.sql` - 3-character country code standardization
 
 ## 🚀 Implementation Roadmap
 
@@ -110,26 +150,35 @@ DWN Device Events → Session Replay Extraction → Decision Platform Join → F
 
 ## 🎯 Business Impact
 
-### **Operational Efficiency**
+### **Session Replay Fraud Detection**
 - **98.8% reduction** in analyst review volume
 - **5.8x improvement** in precision (higher quality alerts)
-- **Clear ROI**: Redirect analyst time to high-value investigations
-
-### **Fraud Detection Enhancement**
 - **Step number discovery**: Revolutionary untapped signal for session replay detection
 - **Signal refinement**: MISSING_PUBLIC_KEY patterns show superior discrimination
 - **Scalable approach**: Foundation for advanced ML-based fraud scoring
 
-### **Risk Management**
-- **Conservative implementation**: Low-risk, high-impact approach
-- **Proven methodology**: Data-driven rule optimization with clear validation
-- **Monitoring framework**: Built-in performance tracking and alerting
+### **Network Carrier Mapping**
+- **68.44% mapping coverage** (vs 30.70% manual approach)
+- **315 comprehensive carriers** mapped with 3-character country codes
+- **AI-assisted methodology**: Superior research approach using ChatGPT-5
+- **Geographic insights**: Country-level analysis capabilities for login data
+- **Reusable workflow**: Proven 4-step process for future carrier mapping projects
+
+### **Technical Infrastructure**
+- **Auto-approval configuration**: Seamless Python command execution
+- **Data standardization**: 3-character country codes (USA, TWN, UNK, etc.)
+- **Clean architecture**: Proper table naming and structure
+- **Comprehensive documentation**: Complete analysis pipeline and methodology
 
 ---
 
 ## 🔄 Project Status: **COMPLETED**
-**Analysis Date**: January 2025  
-**Next Action**: Deploy Rule 1 for A/B testing  
+**Analysis Date**: September 2025  
+**Next Actions**: 
+- Deploy Rule 1 for A/B testing (Session Replay)
+- Apply carrier mapping workflow to future projects
 **Key Contact**: Analysis documented in `docs/memory.md` for future reference
 
-> 💡 **Key Takeaway**: The step number pattern discovery represents a breakthrough in session replay fraud detection - fraudsters' 2x higher UI navigation complexity provides a completely untapped signal for dramatically improving detection precision while reducing operational overhead.
+> 💡 **Key Takeaways**: 
+> 1. **Session Replay**: The step number pattern discovery represents a breakthrough in fraud detection - fraudsters' 2x higher UI navigation complexity provides a completely untapped signal for dramatically improving detection precision while reducing operational overhead.
+> 2. **Carrier Mapping**: AI-assisted research methodology (ChatGPT-5 + CSV output) delivers superior results (68.44% vs 30.70% coverage) and should be the standard approach for all future carrier mapping projects.

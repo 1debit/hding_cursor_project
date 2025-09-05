@@ -1,13 +1,5 @@
 # Cursor-specific ignore patterns
-# Large data files that shouldn't be indexed by Cursor
-*.parquet
-# *.csv  # Commented out to allow CSV analysis
-*.json
-*.xlsx
-*.xls
-data/
-exports/
-downloads/
+
 
 # Large log files
 logs/

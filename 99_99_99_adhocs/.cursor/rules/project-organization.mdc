@@ -1,0 +1,270 @@
+---
+name: Project Organization and Workflow
+description: >
+  Project organization standards and workflow for adhoc data analysis projects.
+  Covers folder structure, documentation, and collaboration patterns.
+globs:
+  - "**/*"
+alwaysApply: true
+---
+
+# Project Structure Standards
+
+## Multi-Project Workspace Organization
+```
+99_99_99_adhocs/                    # Main adhoc workspace
+├── .cursor/                        # AI assistant configuration
+│   └── rules/                      # Behavior rules and standards
+├── .vscode/                        # IDE settings and configurations
+├── knowledge_base/                 # Global data knowledge (symlinked)
+│   ├── table_reference.md          # Core tables and field definitions
+│   ├── query_patterns.md           # Reusable SQL patterns
+│   └── business_logic.md           # Business rules and calculations
+├── shared/                         # All shared utilities
+│   ├── scripts/                    # Executable Python scripts (symlinked)
+│   └── utils/                      # Utility modules (symlinked)
+├── logs/                           # Global session logs
+├── projects/                       # Individual project folders
+│   └── YYYY_MM_DD_project_name/    # Standard project naming
+│       ├── docs/                   # Project-specific documentation
+│       │   └── memory.md           # Project context and findings
+│       ├── scripts/                # Project-specific Python scripts
+│       ├── sql/                    # Project SQL files
+│       ├── files/                  # Project input files
+│       ├── outputs/                # Project results and reports
+│       └── README.md               # Project summary and status
+└── README.md                       # Workspace overview and navigation
+```
+
+## Project Naming Convention
+- **Format**: `YYYY_MM_DD_descriptive_name`
+- **Examples**:
+  - `2025_09_02_tpi_mumuplay_emulator`
+  - `2025_01_15_fraud_pattern_analysis`
+  - `2025_03_10_customer_segmentation`
+
+## Project Folder Structure
+Each project follows this standard structure:
+```
+projects/YYYY_MM_DD_project_name/
+├── docs/
+│   └── memory.md                   # Project context, URLs, findings
+├── scripts/                        # Project-specific Python scripts
+├── sql/                           # Project SQL files (numbered 010_, 020_, etc.)
+├── files/                         # Input files (Excel, CSV, etc.)
+├── outputs/                       # Results, reports, visualizations
+└── README.md                      # Project summary and status
+```
+
+# Documentation Standards
+
+## Project Memory Documentation
+Each project's `docs/memory.md` should include:
+
+```markdown
+# Project: [Project Name] - YYYY-MM-DD
+
+## 🎯 Project Context
+- **Objective**: What is this project trying to achieve?
+- **Business Question**: What problem are we solving?
+- **Key Stakeholders**: Who needs the results?
+
+## 📊 Data Sources
+- **Primary Tables**: Main data sources used
+- **External Resources**: URLs, documentation, references
+- **Data Quality Notes**: Known issues, limitations, assumptions
+
+## 🔍 Key Findings
+- **Main Insights**: What did we discover?
+- **Unexpected Results**: Surprising findings or anomalies
+- **Business Impact**: How do findings affect business decisions?
+
+## 🛠️ Technical Approach
+- **Methodology**: How was the analysis conducted?
+- **Tools Used**: SQL, Python, specific libraries
+- **Performance Notes**: Query optimization, data size considerations
+
+## 📈 Results and Deliverables
+- **Key Metrics**: Important numbers and KPIs
+- **Visualizations**: Charts, dashboards created
+- **Recommendations**: Actionable next steps
+
+## 🔗 External Resources
+- **URLs**: Links to documentation, tutorials, references
+- **Contacts**: Key people involved or consulted
+- **Related Projects**: Connections to other analyses
+```
+
+## README.md Structure
+Each project's README.md should include:
+
+```markdown
+# [Project Name] - YYYY-MM-DD
+
+## 📋 Project Summary
+Brief description of the project's purpose and outcomes.
+
+## 🎯 Objectives
+- Primary goal
+- Secondary goals
+- Success criteria
+
+## 📊 Data Sources
+- Table 1: Description and usage
+- Table 2: Description and usage
+- External data: Sources and notes
+
+## 🔍 Key Findings
+- Finding 1: Description and impact
+- Finding 2: Description and impact
+- Finding 3: Description and impact
+
+## 📁 Project Structure
+- `sql/`: SQL queries and analysis scripts
+- `scripts/`: Python scripts for data processing
+- `files/`: Input data files
+- `outputs/`: Results and visualizations
+
+## 🚀 Next Steps
+- Immediate actions
+- Follow-up analysis
+- Stakeholder communication
+
+## 📝 Notes
+- Technical considerations
+- Limitations
+- Lessons learned
+```
+
+# Workflow Standards
+
+## Project Lifecycle
+1. **Project Initiation**
+   - Create project folder with standard structure
+   - Initialize `docs/memory.md` with context
+   - Set up initial `README.md`
+
+2. **Analysis Phase**
+   - Document data sources and quality
+   - Create numbered SQL files (010_, 020_, etc.)
+   - Update memory with findings and URLs
+
+3. **Documentation Phase**
+   - Update README with key findings
+   - Create summary visualizations
+   - Document recommendations
+
+4. **Project Closure**
+   - Finalize all documentation
+   - Archive outputs
+   - Update global knowledge base if applicable
+
+## File Naming Standards
+
+### SQL Files
+- **Format**: `XXX_descriptive_name.sql`
+- **Numbering**: Increment by 10s (010_, 020_, 030_)
+- **Examples**:
+  - `010_data_exploration.sql`
+  - `020_user_behavior_analysis.sql`
+  - `030_final_metrics.sql`
+
+### Python Scripts
+- **Format**: `descriptive_name.py`
+- **Examples**:
+  - `data_processing.py`
+  - `visualization.py`
+  - `analysis_pipeline.py`
+
+### Output Files
+- **Format**: `YYYY-MM-DD_descriptive_name.ext`
+- **Examples**:
+  - `2025-09-02_emulator_analysis_report.pdf`
+  - `2025-09-02_user_metrics_summary.xlsx`
+
+# Collaboration Patterns
+
+## Knowledge Sharing
+- **Global Knowledge**: Store in `knowledge_base/` for reuse across projects
+- **Project Knowledge**: Store in project-specific `docs/memory.md`
+- **Cross-Project Learning**: Update global knowledge base with reusable patterns
+
+## Knowledge Base Growth Protocol
+When user provides SQL/business knowledge:
+
+### **Documentation Requirements**
+- **Always document** new SQL patterns, table relationships, and business logic
+- **Check existing knowledge_base/** before documenting to avoid duplication
+- **Ask clarification questions** if not 100% sure about:
+  - Table schemas and relationships
+  - Business rules and calculations
+  - Data quality assumptions
+  - Performance considerations
+  - Usage context and limitations
+
+### **Knowledge Base Updates**
+- **SQL Patterns**: Add to `knowledge_base/query_patterns.md`
+- **Table Information**: Add to `knowledge_base/table_reference.md`
+- **Business Logic**: Add to `knowledge_base/business_logic.md`
+- **Cross-Reference**: Link related concepts across files
+
+### **Clarification Questions Template**
+When documenting new knowledge, ask:
+1. **Context**: What business problem does this solve?
+2. **Scope**: What are the limitations or assumptions?
+3. **Relationships**: How does this connect to existing tables/processes?
+4. **Quality**: Are there known data quality issues?
+5. **Performance**: Any performance considerations or optimizations?
+6. **Usage**: When and how should this be used?
+
+### **Documentation Standards**
+- **Use clear headings** and consistent formatting
+- **Include examples** with sample data when possible
+- **Document assumptions** and limitations explicitly
+- **Add cross-references** to related knowledge
+- **Include last updated date** for maintenance tracking
+
+## Code Reuse
+- **Shared Utilities**: Place in `shared/utils/` for cross-project use
+- **Project-Specific**: Keep in project `scripts/` folder
+- **Documentation**: Always document reusable functions and patterns
+
+## Communication Standards
+- **Daily Logs**: Update `logs/YYYY-MM-DD.md` for session progress
+- **Project Updates**: Update project README with major milestones
+- **Knowledge Transfer**: Document context and decisions for future reference
+
+# Quality Assurance
+
+## Project Review Checklist
+- [ ] Project folder follows standard structure
+- [ ] All SQL files have proper headers and documentation
+- [ ] Python scripts include docstrings and error handling
+- [ ] Project memory is up-to-date with findings and URLs
+- [ ] README provides clear project summary
+- [ ] Outputs are properly organized and documented
+- [ ] Global knowledge base updated if applicable
+
+## Code Quality Standards
+- [ ] SQL follows naming conventions and safety practices
+- [ ] Python code is formatted with Black and passes linting
+- [ ] Functions include type hints and comprehensive docstrings
+- [ ] Error handling is implemented for data operations
+- [ ] Performance considerations are documented
+
+# Maintenance and Cleanup
+
+## Project Archival
+- **Active Projects**: Keep in `projects/` folder
+- **Completed Projects**: Consider moving to archive location
+- **Cleanup**: Remove temporary files and cache directories
+
+## Global Resource Maintenance
+- **Knowledge Base**: Regular updates with new patterns and insights
+- **Shared Utilities**: Version control and backward compatibility
+- **Documentation**: Keep current with system changes
+
+## Workspace Hygiene
+- **Log Files**: Regular cleanup of old log files
+- **Temporary Files**: Remove cache and temporary directories
+- **Symlinks**: Verify global resource symlinks are working

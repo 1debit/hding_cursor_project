@@ -1,0 +1,1 @@
+../global_snowflake_utils/scripts/setup_check.py

@@ -1,0 +1,65 @@
+# Best Practices & Memorization Rules
+
+> Central repository for best practices, workflows, and rules that don't fit other MDC purposes
+
+## 🎯 Knowledge Base Accuracy
+
+### When User Provides Contradictory Information
+- **ALWAYS clarify discrepancies** before proceeding with any analysis
+- **NEVER assume or guess** - always ask for clarification
+- **DO NOT create false contradictions** - the knowledge base is generally accurate
+- **Verify understanding** before making changes to knowledge base
+
+### Clarification Process
+1. **Identify the specific contradiction** or unclear point
+2. **Ask targeted questions** to resolve the discrepancy
+3. **Update knowledge base** only after receiving clear confirmation
+4. **Document the clarification** for future reference
+
+### Examples of When to Clarify
+- Table names or field names that seem inconsistent
+- Business logic that appears contradictory
+- Schema relationships that are unclear
+- Calculation methods that seem ambiguous
+
+### Examples of What NOT to Do
+- ❌ Assume the knowledge base is wrong without asking
+- ❌ Create false contradictions where none exist
+- ❌ Guess at meanings without clarification
+- ❌ Proceed with analysis when information is unclear
+
+## 📋 Knowledge Base Maintenance
+- **Keep knowledge base accurate** and up-to-date
+- **Document clarifications** when received
+- **Flag areas for future learning** (e.g., SAD score details)
+- **Maintain consistency** across all knowledge base files
+
+## 🔄 Additional Best Practices
+
+### Table Naming Conventions
+- **Always check `knowledge_base/table_reference.md` for standard table aliases**
+- Use the common aliases documented in the table reference for consistency
+- Examples: `rae` for real-time auth events, `beth table` for card auth events
+- These are the standard naming conventions used by the team
+
+### Knowledge Base Update Protocol
+- **CRITICAL**: When learning new information or when user says "save to log", update ALL knowledge base files:
+  1. **Main knowledge files**: `table_reference.md`, `query_patterns.md`, `business_logic.md`
+  2. **Quick lookup files**: `QUICK_LOOKUP.md`, `SEARCH_INDEX.md`
+  3. **Cursor rules**: `.cursor/rules/*.mdc` files if new best practices discovered
+- **Purpose**: Ensure knowledge base remains comprehensive and searchable
+- **Efficiency**: Quick lookup files are critical for efficient knowledge retrieval
+- **Consistency**: Keep all files synchronized with new information
+
+### Project Workflow Protocol
+- **When user says "let's work on X project"**:
+  1. **Change working directory** to the specific project folder
+  2. **Provide high-level summary** of what's been done and what can be done next
+  3. **Ask clarifying questions** if needed
+  4. **Proceed with work** until receiving specific instructions
+- **During project work**: If learning new ideas, queries, tables, or knowledge, **immediately update the knowledge base** in the root folder so all projects can leverage it
+- **Cross-project learning**: Ensure knowledge gained in one project benefits all future projects
+
+---
+
+> 📝 **Note:** This file serves as a catch-all for best practices, workflows, and rules that don't fit the specific purposes of other MDC files (SQL patterns, Python practices, project organization, etc.).
