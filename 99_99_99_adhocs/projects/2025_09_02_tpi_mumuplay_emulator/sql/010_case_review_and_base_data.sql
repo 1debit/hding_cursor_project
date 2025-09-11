@@ -2,7 +2,7 @@
 all login request(a3id) with outcome
 */
 
-create or replace  table risk.test.hding_a3id_login_with_outcome as(
+create or replace  table moning as(
     select
     account_access_attempt_id, reconciled_outcome, decision_id, user_id
     from chime.decision_platform.authn

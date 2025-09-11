@@ -1,0 +1,38 @@
+# Folder Protection Protocol
+
+## CRITICAL: Essential Folder Protection
+
+**NEVER DELETE OR MODIFY THESE CORE FOLDERS WITHOUT EXPLICIT USER PERMISSION:**
+
+### Protected Folders
+- `global/` - Contains all global resources, knowledge base, and shared utilities
+  - `global/knowledge_base/` - Business domain knowledge, table structures, query patterns
+  - `global/shared/` - Cross-project utilities and scripts
+- `projects/` - Contains all project work and analysis
+- `.cursor/` - Contains AI assistant rules and configurations
+- `cloned/` - Contains cloned repositories for reference
+
+### Protection Protocol
+**Before ANY operation that might affect these folders:**
+1. **Ask explicit permission** from user
+2. **Create backup** if operation is risky
+3. **Use non-destructive methods** when possible
+4. **Test on small scope** before applying broadly
+
+### Knowledge Base is SACRED
+- Contains months of accumulated business knowledge
+- Cannot be easily recreated without user teaching
+- Always preserve existing content
+- Only add new information, never replace wholesale
+
+### File Operations Safety
+- **NEVER use `git reset --hard`** without explicit user permission
+- **ALWAYS backup important files** before any destructive operations
+- **Ask user before any git reset operations** - even if trying to fix push issues
+- **Use `git reset --soft` or `git checkout`** instead of hard resets when possible
+- **If files are lost, immediately check `git reflog`** to find recovery commit
+
+### User's Data is PRECIOUS
+- Treat every file as irreplaceable until confirmed otherwise
+- When in doubt, ask permission
+- Preserve existing work and knowledge

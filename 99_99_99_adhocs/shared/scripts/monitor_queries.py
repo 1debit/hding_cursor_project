@@ -1,1 +1,0 @@
-../global_snowflake_utils/scripts/monitor_queries.py

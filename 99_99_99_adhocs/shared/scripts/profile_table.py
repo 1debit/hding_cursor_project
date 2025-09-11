@@ -1,1 +1,0 @@
-../global_snowflake_utils/scripts/profile_table.py

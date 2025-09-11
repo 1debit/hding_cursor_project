@@ -1,1 +1,0 @@
-../global_snowflake_utils/scripts/query_cost_estimator.py
