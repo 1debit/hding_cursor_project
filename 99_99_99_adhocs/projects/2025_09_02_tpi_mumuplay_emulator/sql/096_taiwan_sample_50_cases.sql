@@ -7,32 +7,24 @@
 
 -- Create sample table with 50 Taiwan network carrier users
 CREATE OR REPLACE TABLE RISK.TEST.taiwan_sample_50_cases AS
-SELECT
-    a.user_id,
-    m.created_at as account_creation_date,
-    DATEDIFF(month, m.created_at, CURRENT_DATE()) as mob_as_of_today,
-    a._creation_timestamp as login_date,
-    CASE WHEN c.user_has_activated_physical_card = true THEN 'Y' ELSE 'N' END as card_activated,
-    CASE WHEN c.user_is_payroll_dd = true THEN 'Y' ELSE 'N' END as dder_payroll,
-    m.status as user_status
-FROM RISK.TEST.all_logins_with_dwn a
-LEFT JOIN chime.finance.members m ON (a.user_id = m.id::varchar)
-LEFT JOIN (
-    SELECT
-        user_id,
-        user_has_activated_physical_card,
-        user_is_payroll_dd
-    FROM chime.decision_platform.base_user_fields
-    QUALIFY ROW_NUMBER() OVER (PARTITION BY user_id ORDER BY NULL) = 1
-) c ON (a.user_id = c.user_id)
-WHERE 1=1
-    AND a.country_code = 'TWN'  -- Taiwan network carrier
-    AND a.ip_country = 'USA'    -- USA IP address
-    AND a.mapping_status = 'Mapped'
-    AND a.country_name != 'Unknown'
-    AND m.created_at IS NOT NULL  -- Ensure we have account creation date
-    AND m.status = 'active'  -- Active users only
-ORDER BY RANDOM()  -- Random sampling
+WITH taiwan_users AS (
+    SELECT DISTINCT
+        l.user_id,
+        m.enrollment_initiated_ts AS account_creation_date,
+        DATEDIFF('month', m.enrollment_initiated_ts, CURRENT_DATE()) AS mob_as_of_today,
+        l._creation_timestamp AS login_date,
+        CASE WHEN l.user_has_activated_physical_card = 'true' THEN 'Yes' ELSE 'No' END AS card_activated,
+        CASE WHEN l.user_is_payroll_dd = 'true' THEN 'Yes' ELSE 'No' END AS dder_payroll,
+        l.user_status
+    FROM RISK.TEST.all_logins_with_dwn l
+    JOIN edw_db.core.member_details m ON l.user_id = m.user_id
+    WHERE l.network_carrier IN ('FarEasTone', 'Chunghwa Telecom', 'Taiwan Mobile', 'T Star')
+        AND l.user_status = 'active'
+        AND l._creation_timestamp >= '2024-01-01'
+    QUALIFY ROW_NUMBER() OVER (PARTITION BY l.user_id ORDER BY l._creation_timestamp DESC) = 1
+)
+SELECT *
+FROM taiwan_users
 LIMIT 50;
 
 -- Display the sample results

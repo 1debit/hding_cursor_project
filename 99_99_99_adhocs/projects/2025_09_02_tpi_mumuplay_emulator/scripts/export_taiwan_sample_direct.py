@@ -1,19 +1,15 @@
 #!/opt/homebrew/bin/python3
 """
-Export Taiwan Network Carrier Sample Cases to Excel
-Exports the 50 Taiwan network carrier sample cases for analysis
+Export Taiwan Network Carrier Sample Cases to Excel - Direct Snowflake Connector
+Uses direct snowflake.connector for better compatibility
 """
 
 import sys
 import os
 import pandas as pd
+import snowflake.connector
 from datetime import datetime
 from pathlib import Path
-
-# Add the global utilities to the path
-sys.path.append('/Users/hao.ding/Documents/GitHub/hding_cursor_project/99_99_99_adhocs/global')
-
-from src.sf_client import get_connection
 
 def export_taiwan_sample():
     """Export Taiwan sample cases to Excel with proper formatting"""
@@ -33,11 +29,27 @@ def export_taiwan_sample():
     """
     
     try:
-        # Connect to Snowflake
-        conn = get_connection()
+        # Connect to Snowflake using direct connector
+        conn = snowflake.connector.connect(
+            user='HAO.DING@CHIME.COM',
+            account='CHIME',
+            warehouse='RISK_WH',
+            role='SNOWFLAKE_PROD_ANALYTICS_PII_ROLE_OKTA',
+            authenticator='externalbrowser'
+        )
         
-        # Execute query and get DataFrame directly
-        df = pd.read_sql(query, conn)
+        # Execute query
+        cursor = conn.cursor()
+        cursor.execute(query)
+        
+        # Get column names
+        columns = [desc[0] for desc in cursor.description]
+        
+        # Fetch all results
+        results = cursor.fetchall()
+        
+        # Create DataFrame
+        df = pd.DataFrame(results, columns=columns)
         
         # Format datetime columns (remove timezone for Excel compatibility)
         if 'account_creation_date' in df.columns:
@@ -84,7 +96,8 @@ def export_taiwan_sample():
         print(f"   Payroll DD: {df['dder_payroll'].value_counts().get('Yes', 0)} users")
         print(f"   Active status: {df['user_status'].value_counts().get('active', 0)} users")
         
-        # Close connection
+        # Close connections
+        cursor.close()
         conn.close()
         
         return output_file
